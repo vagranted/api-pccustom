@@ -12,6 +12,7 @@ class Component extends Model
     public $timestamps = false;
     protected $table = 'components';
     protected $primaryKey = 'id';
+    protected $guarded = [];
 
     public function type()
     {
