@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ComponentResource;
 use App\Models\Component;
 use App\Http\Requests\StoreComponentRequest;
 use App\Http\Requests\UpdateComponentRequest;
@@ -30,7 +31,7 @@ class ComponentController extends Controller
         $componentType = ComponentType::where('title', $componentTypeTitle)->first();
         $payloadCollection->put('component_type_id', $componentType->id);
         $component = Component::create($payloadCollection->toArray());
-        return $component->toArray();
+        return new ComponentResource($component);
     }
 
     /**

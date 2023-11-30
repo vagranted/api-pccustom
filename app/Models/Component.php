@@ -16,7 +16,7 @@ class Component extends Model
 
     public function type()
     {
-        return $this->belongsTo(ComponentType::class, 'components_type_id', 'id');
+        return $this->belongsTo(ComponentType::class, 'component_type_id', 'id');
     }
 
     public function computers()
