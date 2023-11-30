@@ -13,17 +13,18 @@ use Illuminate\Support\Facades\Log;
 
 class ComponentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function __construct()
     {
-        //
+        $this->middleware('auth:sanctum')->except(['index', 'show']);
+        $this->authorizeResource(Component::class, 'component');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    public function index()
+    {
+        return ComponentResource::collection(Component::all());
+    }
+
+
     public function store(StoreComponentRequest $request)
     {
         $payloadCollection = $request->collect();
@@ -34,25 +35,18 @@ class ComponentController extends Controller
         return new ComponentResource($component);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Component $component)
     {
-        return $component->toArray();
+        return new ComponentResource($component);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateComponentRequest $request, Component $component)
     {
-        //
+        $payload = $request->validated();
+        $component->update($payload);
+        return new ComponentResource($component);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Component $component)
     {
         $component->delete();
