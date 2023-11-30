@@ -12,6 +12,7 @@ class Computer extends Model
     public $timestamps = false;
     protected $table = 'computers';
     protected $primaryKey = 'id';
+    protected $guarded = [];
 
     public function components()
     {
