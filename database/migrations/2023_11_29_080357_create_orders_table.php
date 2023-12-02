@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->unsignedTinyInteger('order_status_id');
+            $table->unsignedBigInteger('number')->unique()->nullable();
+            $table->unsignedTinyInteger('order_status_id')->default(1);
             $table->foreignId('user_id');
             $table->morphs('orderable');
             $table->timestamps();

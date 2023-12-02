@@ -17,7 +17,8 @@ class ComputerResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'components' => ComponentResource::collection($this->components)
+            'components' => ComponentResource::collection($this->components),
+            'price' => $this->price
         ];
     }
 }

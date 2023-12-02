@@ -28,4 +28,9 @@ class Computer extends Model
     {
         return $this->morphMany(Order::class, 'orderable');
     }
+
+    public function getPriceAttribute()
+    {
+        return $this->components()->sum('price');
+    }
 }
