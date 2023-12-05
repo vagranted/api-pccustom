@@ -29,8 +29,8 @@ class Component extends Model
         );
     }
 
-    public function orders()
+    public function selected()
     {
-        return $this->morphMany(Order::class, 'orderable');
+        return $this->morphMany(SelectedProduct::class, 'selectable');
     }
 }
