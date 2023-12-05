@@ -14,9 +14,9 @@ class OrderStatusSeeder extends Seeder
     public function run(): void
     {
         DB::table('order_statuses')->insert([
-            ['title' => 'cart'],
-            ['title' => 'ordered'],
-            ['title' => 'completed']
+            ['title' => 'выбран'],
+            ['title' => 'подтвержден'],
+            ['title' => 'выполнен']
         ]);
     }
 }

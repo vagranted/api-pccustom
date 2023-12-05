@@ -14,28 +14,23 @@ class Order extends Model
     protected $primaryKey = 'id';
     protected $guarded = [];
 
-    public function orderable()
-    {
-        return $this->morphTo();
-    }
-
     public function status()
     {
         return $this->belongsTo(OrderStatus::class, 'order_status_id', 'id');
     }
 
-    public static function getSum(string $status, $orderNumber = null)
-    {
-        $status = OrderStatus::where('title', $status)->first();
-        $sum = 0;
-
-        if($status->title === 'cart') {
-            $orders = Order::where('order_status_id', $status->id)->get();
-            foreach ($orders as $order) {
-                $sum += $order->orderable->price;
-            }
-        }
-
-        return $sum;
-    }
+//    public static function getSum(string $status, $orderNumber = null)
+//    {
+//        $status = OrderStatus::where('title', $status)->first();
+//        $sum = 0;
+//
+//        if($status->title === 'cart') {
+//            $orders = Order::where('order_status_id', $status->id)->get();
+//            foreach ($orders as $order) {
+//                $sum += $order->orderable->price;
+//            }
+//        }
+//
+//        return $sum;
+//    }
 }

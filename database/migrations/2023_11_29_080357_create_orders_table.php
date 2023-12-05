@@ -6,24 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('number')->unique()->nullable();
-            $table->unsignedTinyInteger('order_status_id')->default(1);
-            $table->foreignId('user_id');
-            $table->morphs('orderable');
-            $table->timestamps();
+            $table->unsignedTinyInteger('order_status_id');
+            $table->unsignedBigInteger('user_id');
+
+            $table->foreign('order_status_id')->references('id')->on('order_statuses');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('orders');
