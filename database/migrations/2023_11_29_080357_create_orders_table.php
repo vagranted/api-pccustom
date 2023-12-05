@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->unsignedTinyInteger('order_status_id');
+            $table->unsignedTinyInteger('order_status_id')->default(1);
             $table->unsignedBigInteger('user_id');
 
             $table->foreign('order_status_id')->references('id')->on('order_statuses');

@@ -19,6 +19,7 @@ class Order extends Model
         return $this->belongsTo(OrderStatus::class, 'order_status_id', 'id');
     }
 
+
 //    public static function getSum(string $status, $orderNumber = null)
 //    {
 //        $status = OrderStatus::where('title', $status)->first();
