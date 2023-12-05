@@ -5,19 +5,21 @@ namespace App\Http\Resources;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection;
+use App\Http\Resources\Component\CartOrderResource;
 
 class OrderCollection extends ResourceCollection
 {
     public string $status;
     public string $sum;
+    public Collection $components;
+    public Collection $computers;
 
     public function __construct($resource)
     {
-        parent::__construct($resource);
-
-        $this->resource = $this->collectResource($resource);
-        $this->status = $resource->first()->status->title;
+        $this->components = $resource->get('components');
+        $this->computers = $resource->get('computers');
+        $this->status = $resource->get('status');
 
         switch ($this->status) {
             case 'cart':
@@ -28,10 +30,10 @@ class OrderCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            'type' => $this->status,
+            'status' => $this->status,
             'sum' => $this->sum,
             'content' => [
-//                'components' => $this->collection->get('component_orders')
+                'components' => CartOrderResource::collection($this->components)
             ]
         ];
     }
