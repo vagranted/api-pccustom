@@ -7,7 +7,7 @@ use App\Http\Resources\ComputerResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class OrderResource extends JsonResource
+class IndexOrderResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
@@ -15,8 +15,6 @@ class OrderResource extends JsonResource
             'id' => $this->id,
             'status' => $this->status->title,
             'sum' => $this->sum,
-            'components' => ComponentResource::collection($this->components),
-            'computers' => ComputerResource::collection($this->computers)
         ];
     }
 }
