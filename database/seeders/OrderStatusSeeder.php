@@ -8,15 +8,12 @@ use Illuminate\Support\Facades\DB;
 
 class OrderStatusSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         DB::table('order_statuses')->insert([
-            ['title' => 'выбран'],
-            ['title' => 'подтвержден'],
-            ['title' => 'выполнен']
+            ['title' => 'cart'],
+            ['title' => 'created'],
+            ['title' => 'completed']
         ]);
     }
 }
