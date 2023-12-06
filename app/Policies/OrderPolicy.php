@@ -21,7 +21,13 @@ class OrderPolicy
     }
     public function view(User $user, Order $order): bool
     {
-        //
+        if($user->role->title === 'manager') return true;
+        else if($user->role->title === 'user') {
+            if($user->id === $order->user_id) return true;
+            else return false;
+        } else {
+            return false;
+        }
     }
 
     public function create(User $user): bool
