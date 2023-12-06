@@ -9,13 +9,16 @@ return new class extends Migration
 
     public function up(): void
     {
-        Schema::create('selected_products', function (Blueprint $table) {
+        Schema::create('orderables', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id');
-            $table->morphs('selectable');
+            $table->morphs('orderable');
             $table->timestamps();
 
-            $table->foreign('order_id')->references('id')->on('orders');
+            $table->foreign('order_id')
+                ->references('id')
+                ->on('orders')
+                ->onDelete('cascade');
         });
     }
 

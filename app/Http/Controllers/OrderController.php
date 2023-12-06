@@ -3,14 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreOrderRequest;
+use App\Http\Resources\OrderResource;
 use App\Models\Component;
 use App\Models\Computer;
 use App\Models\Order;
-use App\Models\SelectedProduct;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
-class OrderContoller extends Controller
+class OrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum');
+    }
 
     public function index()
     {
@@ -20,7 +25,7 @@ class OrderContoller extends Controller
     public function store(StoreOrderRequest $request)
     {
         $user = $request->user();
-
+        Log::debug($user);
         $order = $user->orders()
             ->whereHas('status', function ($query) {
                 $query->where('title', 'выбран');
@@ -53,7 +58,7 @@ class OrderContoller extends Controller
             }
         }
 
-        $carts =
+        return new OrderResource($order);
     }
 
     public function show(Order $order)
