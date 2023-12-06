@@ -6,7 +6,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Collection;
-use App\Http\Resources\Component\CartOrderResource;
+use App\Http\Resources\Component\OrderResource;
 
 class OrderCollection extends ResourceCollection
 {
@@ -33,7 +33,7 @@ class OrderCollection extends ResourceCollection
             'status' => $this->status,
             'sum' => $this->sum,
             'content' => [
-                'components' => CartOrderResource::collection($this->components)
+                'components' => OrderResource::collection($this->components)
             ]
         ];
     }

@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth;
 use App\Http\Controllers\ComponentController;
 use App\Http\Controllers\ComputerController;
-use App\Http\Controllers\OrderContoller;
+use App\Http\Controllers\OrderController;
 
 //Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //    return $request->user();
@@ -20,5 +20,5 @@ Route::controller(Auth::class)->group(function () {
 Route::apiResources([
     'components' => ComponentController::class,
     'computers' => ComputerController::class,
-    'orders' => OrderContoller::class
+    'orders' => OrderController::class
 ]);
