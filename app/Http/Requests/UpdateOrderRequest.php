@@ -8,13 +8,15 @@ class UpdateOrderRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     public function rules(): array
     {
         return [
-            //
+            'status' => ['nullable', 'string', 'exists:order_statuses,title'],
+            'computers' => ['nullable', 'array'],
+            'components' => ['nullable', 'array']
         ];
     }
 }

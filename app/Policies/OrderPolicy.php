@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Order;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class OrderPolicy
 {
@@ -30,14 +31,22 @@ class OrderPolicy
         }
     }
 
-    public function create(User $user): bool
+    public function update(User $user, Order $order, array $payload): bool
     {
-        //
-    }
+        if($user->role->title === 'manager') {
+            if(isset($payload['computers']) AND isset($payload['components'])) {
+                return false;
+            } else if(isset($payload['status'])) {
+                if(isset($payload['status']) AND $payload['status'] !== 'completed') return false;
+            }
+        } else if($user->role->title === 'user') {
+            if($user->id !== $order->user_id) return false;
+            else if(isset($payload['status']) AND $payload['status'] !== 'created') return false;
+        } else {
+            return false;
+        }
 
-    public function update(User $user, Order $order): bool
-    {
-        //
+        return true;
     }
 
     public function delete(User $user, Order $order): bool
