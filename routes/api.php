@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth;
 use App\Http\Controllers\ComponentController;
 use App\Http\Controllers\ComputerController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\UserController;
 
 //Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //    return $request->user();
@@ -24,3 +25,6 @@ Route::apiResources([
 
 Route::apiResource('/orders', OrderController::class)
     ->except('destroy');
+
+Route::apiResource('/users', UserController::class)
+    ->only('index', 'update');
