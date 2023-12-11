@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreOrderRequest;
+use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Resources\Order\IndexOrderResource;
 use App\Http\Resources\Order\OrderResource;
 use App\Models\Component;
 use App\Models\Computer;
 use App\Models\Order;
 use App\Models\OrderablePivot;
+use App\Models\OrderStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -28,16 +30,20 @@ class OrderController extends Controller
         $qStatus = $request->query('status');
         $orders = Order::class;
 
-        if(isset($user)) {
+        if (isset($user)) {
             $orders = (gettype($orders) === 'object')
-                ? $orders->where('user_id', $user)
-                : $orders::where('user_id', $user);
+                ? $orders->where('user_id', $qUser)
+                : $orders::where('user_id', $qUser);
         }
 
-        if(isset($qStatus)) {
+        if (isset($qStatus)) {
             $orders = (gettype($orders) === 'object')
-                ? $orders->whereHas()
-                : $orders::where('user_id', $user);
+                ? $orders->whereHas('status', function ($query) use($qStatus){
+                    $query->where('title', $qStatus);
+                })
+                : $orders::whereHas('status', function ($query) use($qStatus){
+                    $query->where('title', $qStatus);
+                });
         }
 
         $orders = (gettype($orders) === 'object')
@@ -52,10 +58,10 @@ class OrderController extends Controller
         $user = $request->user();
         $order = $user->orders()
             ->whereHas('status', function ($query) {
-                $query->where('title', 'выбран');
-        })->first();
+                $query->where('title', 'cart');
+            })->first();
 
-        if($order) {
+        if ($order) {
             throw ValidationException::withMessages([
                 'cart' => 'Cart has already been created'
             ]);
@@ -67,7 +73,7 @@ class OrderController extends Controller
         ]);
         $payload = $request->validated();
 
-        if(isset($payload['computers'])) {
+        if (isset($payload['computers'])) {
             foreach ($payload['computers'] as $computerId) {
                 OrderablePivot::create([
                     'order_id' => $order->id,
@@ -77,7 +83,7 @@ class OrderController extends Controller
             }
         }
 
-        if(isset($payload['components'])) {
+        if (isset($payload['components'])) {
             foreach ($payload['components'] as $componentId) {
                 OrderablePivot::create([
                     'order_id' => $order->id,
@@ -96,13 +102,43 @@ class OrderController extends Controller
         return new OrderResource($order);
     }
 
-    public function update(Request $request, Order $order)
+    public function update(UpdateOrderRequest $request, Order $order)
     {
-        //
-    }
+        $payload = $request->validated();
+        $this->authorize('update', [$order, $payload]);
 
-    public function destroy(Order $order)
-    {
-        //
+        if (empty($payload)) {
+            throw ValidationException::withMessages([
+                'order' => 'The request body cannot be empty'
+            ]);
+        }
+
+        if (isset($payload['status'])) {
+            $orderStatus = OrderStatus::where('title', $payload['status'])->first();
+            $order->update(['order_status_id' => $orderStatus->id]);
+        }
+
+        if (isset($payload['computers'])) {
+            foreach ($order->computers as $computer) $computer->delete();
+            foreach ($payload['computers'] as $computerId) {
+                OrderablePivot::create([
+                    'order_id' => $order->id,
+                    'orderable_type' => Computer::class,
+                    'orderable_id' => $computerId
+                ]);
+            }
+        }
+
+        if (isset($payload['components'])) {
+            foreach ($order->components as $component) $component->delete();
+            foreach ($payload['components'] as $componentId) {
+                OrderablePivot::create([
+                    'order_id' => $order->id,
+                    'orderable_type' => Component::class,
+                    'orderable_id' => $componentId
+                ]);
+            }
+        }
+        return new OrderResource($order);
     }
 }

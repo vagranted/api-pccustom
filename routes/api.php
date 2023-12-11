@@ -20,5 +20,7 @@ Route::controller(Auth::class)->group(function () {
 Route::apiResources([
     'components' => ComponentController::class,
     'computers' => ComputerController::class,
-    'orders' => OrderController::class
 ]);
+
+Route::apiResource('/orders', OrderController::class)
+    ->except('destroy');
