@@ -16,7 +16,7 @@ class Order extends Model
     protected $primaryKey = 'id';
     protected $guarded = [];
 
-    protected $with = ['status'];
+    protected $with = [];
 
     public function status()
     {
